@@ -2,98 +2,137 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8" />
+<link href="https://fonts.cdnfonts.com/css/minecrafter" rel="stylesheet">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Cuenta regresiva 9 de diciembre</title>
-
+<title>Minecraft: Mounts of Mayhem - Cuenta Regresiva</title>
 <style>
     body {
-        background: #111;
-        color: #fff;
-        font-family: Arial, sans-serif;
+        background: #0e0e0e;
+        color: white;
+        margin: 0;
+        padding: 0;
+        font-family: 'Minecrafter', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+    .title {
+        font-size: 9vw;
         text-align: center;
-        padding: 20px;
-    }
-
-    h2 {
+        background: linear-gradient(to bottom, #ffe066, #ff9b00);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0px 4px 0px #5a4500, 0px 6px 0px #000;
         margin-bottom: 20px;
-        font-size: 1.6rem;
     }
-
-    .box {
+    .countdown-box {
+        padding: 25px;
         background: #222;
-        padding: 20px;
-        border-radius: 20px;
-        display: inline-block;
-        box-shadow: 0 0 15px #000;
+        border: 4px solid #000;
+        position: relative;
+        width: 90%;
+        max-width: 380px;
+        text-align: center;
+        box-shadow: 
+            0px 0px 0px 6px #555, 
+            0px 0px 0px 10px #000;
     }
-
-    .item {
-        display: inline-block;
-        margin: 0 15px;
+    .count-item {
+        font-size: 12vw;
+        margin: 10px 0 0 0;
     }
-
-    .num {
-        font-size: 2.5rem;
-        font-weight: bold;
-    }
-
     .label {
-        color: #bbb;
-        font-size: 1rem;
+        font-size: 4vw;
+        color: white;
+        margin-bottom: 15px;
+    }
+    .finished {
+        font-size: 6vw;
+        color: #00e600;
+        margin-top: 20px;
+        text-shadow: 0px 3px 0px #003300;
     }
 </style>
 </head>
-
 <body>
 
-<h2>Cuenta regresiva para el <br> <strong>9 de diciembre de 2025</strong></h2>
+<div class="title">Minecraft: Mounts of Mayhem</div>
 
-<div class="box">
-    <div class="item">
-        <div id="dias" class="num">00</div>
-        <div class="label">Días</div>
-    </div>
+<div class="countdown-box">
+    <div class="label" id="days-label">Días</div>
+    <div class="count-item" id="days">0</div>
 
-    <div class="item">
-        <div id="horas" class="num">00</div>
-        <div class="label">Horas</div>
-    </div>
+    <div class="label" id="hours-label">Horas</div>
+    <div class="count-item" id="hours">0</div>
 
-    <div class="item">
-        <div id="minutos" class="num">00</div>
-        <div class="label">Minutos</div>
-    </div>
+    <div class="label" id="minutes-label">Minutos</div>
+    <div class="count-item" id="minutes">0</div>
 
-    <div class="item">
-        <div id="segundos" class="num">00</div>
-        <div class="label">Segundos</div>
+    <div class="label" id="seconds-label">Segundos</div>
+    <div class="count-item" id="seconds">0</div>
+
+    <div id="finish-message" class="finished" style="display:none;">
+        ¡Minecraft: Mounts of Mayhem ya está disponible!
     </div>
 </div>
 
 <script>
-    function actualizar() {
-        const destino = new Date("December 9, 2025 00:00:00").getTime();
-        const ahora = Date.now();
-        const diff = destino - ahora;
+    const targetDate = new Date("December 9, 2025 12:00:00").getTime();
 
-        if (diff <= 0) {
-            document.body.innerHTML = "<h1>¡Llegó el 9 de diciembre!</h1>";
+    function playBeep() {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "square";
+        osc.frequency.value = 880;
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.5);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.5);
+    }
+
+    let played = false;
+
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        if (distance <= 0) {
+            if (!played) {
+                playBeep();
+                played = true;
+            }
+
+            document.getElementById("days").style.display = "none";
+            document.getElementById("hours").style.display = "none";
+            document.getElementById("minutes").style.display = "none";
+            document.getElementById("seconds").style.display = "none";
+
+            document.getElementById("days-label").style.display = "none";
+            document.getElementById("hours-label").style.display = "none";
+            document.getElementById("minutes-label").style.display = "none";
+            document.getElementById("seconds-label").style.display = "none";
+
+            document.getElementById("finish-message").style.display = "block";
             return;
         }
 
-        const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const horas = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutos = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const segundos = Math.floor((diff % (1000 * 60)) / 1000);
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        document.getElementById("dias").textContent = dias;
-        document.getElementById("horas").textContent = horas;
-        document.getElementById("minutos").textContent = minutos;
-        document.getElementById("segundos").textContent = segundos;
+        document.getElementById("days").textContent = days;
+        document.getElementById("hours").textContent = hours;
+        document.getElementById("minutes").textContent = minutes;
+        document.getElementById("seconds").textContent = seconds;
     }
 
-    actualizar();
-    setInterval(actualizar, 1000);
+    setInterval(updateCountdown, 1000);
 </script>
 
 </body>
