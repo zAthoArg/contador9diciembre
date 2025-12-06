@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cuenta regresiva 9 de diciembre</title>
+
+<style>
+    body {
+        background: #111;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 20px;
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        font-size: 1.6rem;
+    }
+
+    .box {
+        background: #222;
+        padding: 20px;
+        border-radius: 20px;
+        display: inline-block;
+        box-shadow: 0 0 15px #000;
+    }
+
+    .item {
+        display: inline-block;
+        margin: 0 15px;
+    }
+
+    .num {
+        font-size: 2.5rem;
+        font-weight: bold;
+    }
+
+    .label {
+        color: #bbb;
+        font-size: 1rem;
+    }
+</style>
+</head>
+
+<body>
+
+<h2>Cuenta regresiva para el <br> <strong>9 de diciembre de 2025</strong></h2>
+
+<div class="box">
+    <div class="item">
+        <div id="dias" class="num">00</div>
+        <div class="label">Días</div>
+    </div>
+
+    <div class="item">
+        <div id="horas" class="num">00</div>
+        <div class="label">Horas</div>
+    </div>
+
+    <div class="item">
+        <div id="minutos" class="num">00</div>
+        <div class="label">Minutos</div>
+    </div>
+
+    <div class="item">
+        <div id="segundos" class="num">00</div>
+        <div class="label">Segundos</div>
+    </div>
+</div>
+
+<script>
+    function actualizar() {
+        const destino = new Date("December 9, 2025 00:00:00").getTime();
+        const ahora = Date.now();
+        const diff = destino - ahora;
+
+        if (diff <= 0) {
+            document.body.innerHTML = "<h1>¡Llegó el 9 de diciembre!</h1>";
+            return;
+        }
+
+        const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const horas = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutos = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const segundos = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById("dias").textContent = dias;
+        document.getElementById("horas").textContent = horas;
+        document.getElementById("minutos").textContent = minutos;
+        document.getElementById("segundos").textContent = segundos;
+    }
+
+    actualizar();
+    setInterval(actualizar, 1000);
+</script>
+
+</body>
+</html>
